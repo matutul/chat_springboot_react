@@ -130,7 +130,6 @@ const Login = () => {
         <p className='text-yellow-500 flex gap-2 items-center'><FiAlertTriangle />{errorMessage}</p>
       } */}
       <Toaster className="top-center" />
-      <button onClick={() => toast("Here is the toaster")}>Toaster</button>
     </div>
   )
 }
