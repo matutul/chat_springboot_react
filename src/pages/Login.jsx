@@ -10,6 +10,9 @@ const Login = () => {
   const { user, saveUserAlongStorageHandler } = useContext(UserContext);
   const navigate = useNavigate();
 
+  const [joinRoomLoader, setJoinRoomLoader] = useState(false);
+  const [createRoomLoader, setCreateRoomLoader] = useState(false);
+
   useEffect(() => {
     if (user.name && user.roomId) {
       navigate("/");
@@ -38,18 +41,25 @@ const Login = () => {
 
   const joinHandler = (e) => {
     e.preventDefault();
+    setJoinRoomLoader(true);
     if (state.name && state.roomId) {
-      const room = RoomService.getRoomWithRoomId(state.roomId).then(res => {
-        if (res.status == 200) {
-          saveUserAlongStorageHandler({ name: state.name, roomId: state.roomId });
-          navigate("/");
-        }
-      })
-        .catch(res => {
-          if (res.status != 201) {
-            toast.error(res.response?.data || "Something went wrong!");
+      try {
+        RoomService.getRoomWithRoomId(state.roomId).then(res => {
+          if (res.status == 200) {
+            saveUserAlongStorageHandler({ name: state.name, roomId: state.roomId });
+            navigate("/");
+            setJoinRoomLoader(false);
           }
+        }).catch(() => {
+          toast.error("Something went wrong. Please try again!");
+          setJoinRoomLoader(false);
         });
+      } catch (error) {
+        // if (res.status != 200) {
+        //   toast.error(res.response?.data || "Something went wrong!");
+        // }
+        console.log(error);
+      }
     } else {
       setErrorMessage({ id: 3, message: "Please enter your credentials." })
       if (state.name) {
@@ -62,16 +72,19 @@ const Login = () => {
 
   const createRoomHandler = (e) => {
     e.preventDefault();
+    setCreateRoomLoader(true);
     if (state.name && state.roomId) {
       RoomService.createRoomWithRoomId(state.roomId).then(res => {
         if (res.status == 201) {
           toast.success("Room created successfully");
+          saveUserAlongStorageHandler({ name: state.name, roomId: state.roomId });
+          navigate("/");
+          setCreateRoomLoader(false);
         }
       })
-        .catch(res => {
-          if (res.status != 201) {
-            toast.error(res.response.data);
-          }
+        .catch(() => {
+          toast.error("Something went wrong. Please try again!");
+          setCreateRoomLoader(false);
         });
     }
     else {
@@ -120,8 +133,8 @@ const Login = () => {
             {errorMessage?.id == 3 && <span className='text-xs text-amber-500'>{errorMessage.message}</span>}
           </div>
           <div className="w-full flex justify-between gap-3 items-center p-4 bg-gray-300 dark:bg-gray-800">
-            <button className='p-2 px-8 bg-green-700 hover:bg-green-800 text-gray-200 font-bold rounded-lg' onClick={(e) => joinHandler(e)}>Join</button>
-            <button className='p-2 px-8 bg-teal-800 hover:bg-teal-900 text-gray-200 font-bold rounded-lg' onClick={(e) => createRoomHandler(e)}>Create room</button>
+            <button className='p-2 px-8 bg-green-700 hover:bg-green-800 text-gray-200 font-bold rounded-lg' onClick={(e) => joinHandler(e)}>{joinRoomLoader ? <span>Joining<span className='animate-ping'>...</span></span> : "Join"}</button>
+            <button className='p-2 px-8 bg-teal-800 hover:bg-teal-900 text-gray-200 font-bold rounded-lg' onClick={(e) => createRoomHandler(e)}>{createRoomLoader? <span>Creating room<span className='animate-ping'>...</span></span> : "Create room"}</button>
           </div>
         </form>
       </div>

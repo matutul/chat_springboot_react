@@ -51,18 +51,11 @@ const ChatHomePage = () => {
     },
     {
       content: "Hello buddy!",
-      sender: "test",
+      sender: "test1",
     },
   ]
   return (
     <div className='w-full h-screen bg-gray-200 text-gray-950 dark:bg-gray-900 dark:text-gray-200 flex flex-col gap-2 justify-center items-center p-2 md:p-0'>
-      {/* <p>Here is the chat room</p>
-      {user && <p>{user.name}</p>}
-      <button className='cursor-pointer' onClick={() => {
-        localStorage.removeItem("chatUser");
-        saveUserAlongStorageHandler({name:"", roomId:""});
-        navigate("/login");
-      }}>Logout</button> */}
       <div className="w-full md:w-md lg:w-lg h-full md:h-[calc(100vh-60px)] rounded-lg bg-gray-300 dark:bg-gray-800 shadow darK:border flex flex-col space-between overflow-hidden">
         {/* header section */}
         <div className="h-16 bg-gray-400 dark:bg-gray-950 p-4 px-6 flex items-center justify-between">

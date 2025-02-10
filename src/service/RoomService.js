@@ -3,13 +3,13 @@ import { AppConfig } from "../config/AppConfig";
 
 const BASE_BACKEND_API=AppConfig.backendBaseApi;
 
-const getRoomWithRoomId = (roomId) => {
+const getRoomWithRoomId = async (roomId) => {
     const url = `${BASE_BACKEND_API}/api/v1/rooms/${roomId}`
-    return axios.get(url);
+    return await axios.get(url);
 }
 
-const createRoomWithRoomId = (roomId) => {
-    return axios.post(BASE_BACKEND_API+"/api/v1/rooms", roomId, {
+const createRoomWithRoomId = async (roomId) => {
+    return await axios.post(BASE_BACKEND_API+"/api/v1/rooms", roomId, {
         headers: {
             'Content-Type':'text/plain'
         }
