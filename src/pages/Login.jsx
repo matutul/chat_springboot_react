@@ -14,7 +14,8 @@ const Login = () => {
   const [createRoomLoader, setCreateRoomLoader] = useState(false);
 
   useEffect(() => {
-    if (user.name && user.roomId) {
+    console.log(user)
+    if ((user.name && user.roomId) || (JSON.parse(localStorage.getItem("chatUser"))?.name && JSON.parse(localStorage.getItem("chatUser"))?.roomId)) {
       navigate("/");
     }
   }, [])

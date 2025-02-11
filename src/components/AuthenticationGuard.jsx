@@ -7,6 +7,8 @@ const AuthenticationGuard = ({ children }) => {
   useEffect(()=>{
     if (!localStorage.getItem("chatUser") && !JSON.parse(localStorage.getItem("chatUser"))?.roomId) {
       navigate("/login");
+    } else if(!JSON.parse(localStorage.getItem("chatUser")).name || !JSON.parse(localStorage.getItem("chatUser")).roomId) {
+      navigate("/login")
     }
   }, [])
 

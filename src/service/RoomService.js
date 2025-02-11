@@ -4,7 +4,7 @@ import { AppConfig } from "../config/AppConfig";
 const BASE_BACKEND_API=AppConfig.backendBaseApi;
 
 const getRoomWithRoomId = async (roomId) => {
-    const url = `${BASE_BACKEND_API}/api/v1/rooms/${roomId}`
+    const url = `${BASE_BACKEND_API}/api/v1/rooms/${1}`
     return await axios.get(url);
 }
 
@@ -17,9 +17,14 @@ const createRoomWithRoomId = async (roomId) => {
     // .catch(res => console.log(res.data));
 }
 
+const getMessagesFromDatabase = async (roomId, page=0, size=20) => {
+    return await axios.get(`${BASE_BACKEND_API}/api/v1/rooms/${roomId}/messages?page=${page}&size=${size}`);
+}
+
 const RoomService = {
     getRoomWithRoomId,
-    createRoomWithRoomId
+    createRoomWithRoomId,
+    getMessagesFromDatabase
 }
 
 export default RoomService;
