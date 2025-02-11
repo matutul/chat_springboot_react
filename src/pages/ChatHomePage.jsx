@@ -29,7 +29,7 @@ const ChatHomePage = () => {
       await RoomService.getMessagesFromDatabase(user.roomId, page, size)
         .then(res => {
           setTotalMessages(res.data.totalMessages);
-          setmessages(res.data.paginatedMessages);
+          setmessages((prev) => [...res.data.paginatedMessages, ...prev]);
         })
         .catch((error) => toast.error("Something went wrong"))
     }
@@ -127,7 +127,7 @@ const ChatHomePage = () => {
           [&::-webkit-scrollbar-thumb]:rounded-full
           dark:[&::-webkit-scrollbar-track]:bg-gray-700
           dark:[&::-webkit-scrollbar-thumb]:bg-emerald-700">
-          {showMoreMessageButton && <button className='w-8 aspect-square rounded-full absolute top-2 left-[50%] -translate-x-[50%] bg-gray-500 animate-pulse flex justify-center items-center text-xl' onClick={() => setPage((prev) => prev + 1)}><FiArrowUp /></button>}
+          {totalMessages > messages.length && <button className='w-8 aspect-square rounded-full absolute top-2 left-[50%] -translate-x-[50%] bg-gray-500 animate-pulse flex justify-center items-center text-xl' onClick={() => setPage((prev) => prev + 1)}><FiArrowUp /></button>}
           {messages.length ? messages.map((msg, index) => (
             <div className={`w-full flex items-end gap-1.5 ${user.name == msg.sender ? "flex-row-reverse" : ""}`}>
               <div className={`w-10 aspect-square rounded-full flex justify-center items-center uppercase text-white ${user.name == msg.sender ? "bg-emerald-700" : "bg-slate-600"}`}>{msg.sender.charAt(0)}</div>
