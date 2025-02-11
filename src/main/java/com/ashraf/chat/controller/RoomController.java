@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/rooms")
@@ -45,23 +47,33 @@ public class RoomController {
 
     //    get messages of a room with room id
     @GetMapping("/{roomId}/messages")
-    public ResponseEntity<List<Message>> getRoomMessages(
+    public ResponseEntity<?> getRoomMessages(
             @PathVariable String roomId,
-            @RequestParam(value = "page", defaultValue = "1", required = false) int page,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "20", required = false) int size
     ) {
-        Room room = roomRepository.findByRoomId(roomId);
-        if(room == null) {
-            return ResponseEntity.notFound().build();
+        try {
+            Map<String, Object> result = new HashMap<>();
+            Room room = roomRepository.findByRoomId(roomId);
+            if(room == null) {
+                return ResponseEntity.notFound().build();
+            }
+            List<Message> roomMessages = room.getMessages();
+            int start = roomMessages.size() - (page + 1) * size;
+            int end = start + size;
+            if(start<0) {
+                start = 0;
+            }
+            if(end <= 0 && start <= 0) return ResponseEntity.notFound().build();
+            List<Message> paginatedMessages = roomMessages.subList(start, end);
+            Integer totalMessages = roomMessages.size();
+            result.put("totalMessages", totalMessages);
+            result.put("paginatedMessages", paginatedMessages);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        List<Message> roomMessages = room.getMessages();
-        int start = (page - 1) * size;
-        int end = start + size;
-        if(end > roomMessages.size()) {
-            end = roomMessages.size();
-        }
-        List<Message> paginatedMessages = roomMessages.subList(start, end);
-        return ResponseEntity.ok(paginatedMessages);
     }
 }
 
