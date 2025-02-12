@@ -42,7 +42,7 @@ public class RoomController {
         if(room == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(room);
+        return ResponseEntity.ok(room.getRoomId());
     }
 
     //    get messages of a room with room id
