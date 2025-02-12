@@ -4,7 +4,7 @@ import { AppConfig } from "../config/AppConfig";
 const BASE_BACKEND_API=AppConfig.backendBaseApi;
 
 const getRoomWithRoomId = async (roomId) => {
-    const url = `${BASE_BACKEND_API}/api/v1/rooms/${1}`
+    const url = `${BASE_BACKEND_API}/api/v1/rooms/${roomId}`
     return await axios.get(url);
 }
 
